@@ -1,0 +1,63 @@
+.navContainer {
+    width: 30%;
+    max-width: 270px;
+    height: 80vh;
+    background-color: rgb(235, 235, 235);
+    display: flex;
+}
+
+.logo{
+    font-size: 2.6em;
+    font-weight: 800;    
+    padding-bottom: 60px;
+    text-align: center;
+    color: rgb(81, 81, 81);
+    cursor: pointer;
+    position: relative;
+}
+.sub{
+    font-size: 1em;
+    font-weight: 600;
+    padding-left: 30px;
+    margin-bottom: 10px;
+    color: rgb(93, 93, 93);
+}
+.navWrapper{
+    margin-top: 50px;
+}
+.navList{
+    margin-bottom: 10px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: rgb(98, 98, 98);
+}
+.navList:hover, .sub:hover{
+    background-color: greenyellow;
+}
+.iconNav{
+    font-size: 10px;
+    margin-right: 5px;
+}
+.top{
+    margin-bottom: 40px;
+}
+.logout{
+    margin: 90px auto 0 25px;
+    color: rgb(98, 98, 98);
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 500;
+    padding-left: 10px;
+}
+.logout:hover{
+    background-color: greenyellow;
+}
+.sbLogin{
+    position: absolute;
+    right: 50px;
+    top: 50px;
+    margin: 0px 0 15px 20px;
+    font-size: 12px;
+}

@@ -1,0 +1,6 @@
+.textBlog{
+    display: flex;
+}
+.textBlog>textarea{
+    margin-left: auto;
+}

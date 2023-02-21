@@ -1,0 +1,41 @@
+.boxWrapper{
+    width: 180px;
+    height: 225px;
+    background-color: greenyellow;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+}
+.boxImage{
+    width: 90%;
+    height: 140px;
+    background-size: contain;
+}
+.btnWrapper{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100px;
+    padding: 5px 0;
+}
+.boxTitle{
+    margin-bottom: 10px;
+    font-size: 12px;
+}
+.btnBox{
+    border: solid 1px black;
+    border-radius: 4px;
+    margin: 2px 0;
+    background-color: greenyellow;
+    cursor: pointer;
+    font-size: 12px;
+}
+.btnBox:hover{
+    background-color: rgb(222, 253, 177);
+    border: solid 1px rgb(222, 253, 177);
+}
+.boxWrapper:hover{
+    background-color: rgba(153, 255, 0, 0.5);
+}
