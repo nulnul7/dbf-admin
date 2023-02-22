@@ -2,37 +2,66 @@ import { useState } from 'react';
 import './blog.css';
 import Sidebar from '../sidebar/Sidebar';
 import axios from 'axios';
+import loadingPict from "../../assets/LoadingBunny.gif";
+
 
 const AddBlog = () => {
 
     const [blogPhotos, setBlogPhotos] = useState({});
     const [category, setCategory] = useState([]);
     const [blog, setBlog] = useState({})
+    const [loading, setLoading] = useState();
 
     const handleChange = (e) => {
         //create 2 part value; previous value and realtime value and store to usestate
         setBlog((prev) => ({ ...prev, [e.target.id]: e.target.value }))
-        // console.log(blog, "isi dari blog");
-
     }
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        //loading info
+        const options = {
+            onUploadProgress: (progressEvent) => {
+                const { loaded, total } = progressEvent;
+
+                let precentage = Math.floor((loaded * 100) / total);
+                console.log('options', precentage);
+                precentage !== 100 ? setLoading(true) : setLoading(false)
+            },
+        };
+
         //first upload photos to cloudinary and return url address
         try {
-            const photoURL = Object.values(blogPhotos).map(async (photo) => {
-                const photoForm = new FormData();
-                photoForm.append("file", photo)
-                photoForm.append("upload_preset", "portImages")
-                const postPhoto = await axios("https://api.cloudinary.com/v1_1/mangga/image/upload",
-                    photoForm
+            const getURLBlogPhoto = (
+                await Promise.all(
+                    Object.values(blogPhotos).map(async (photo) => {
+                        const photoPostForm = new FormData()
+                        photoPostForm.append("file", photo) // nama file yg mau di post
+                        photoPostForm.append("upload_preset", "blogImages") // nama folder upload preset
+                        const postBlog = await axios.post("https://api.cloudinary.com/v1_1/mangga/image/upload",
+                            photoPostForm,
+                            options
+                        )
+                        console.log(postBlog.data.url, "ohyeah");
+                        return postBlog.data.url
+                    })
                 )
-                console.log(postPhoto, "isi dari post foto", photoURL);
-            })
+            )
+            const { author, title, content, glance } = blog
+            const blogContent = {
+                author, title, content, glance, category, photos: getURLBlogPhoto
+            }
+            console.log(" apa isinya ", blogContent);
+
+
+
+
         } catch (error) {
-            console.log(error.data);
+            console.log("isi dari error", error);
         }
 
-
+        setBlogPhotos({})
     }
 
     return (
@@ -55,11 +84,11 @@ const AddBlog = () => {
                                     />
                                 </div>
                                 <div className="addPortInput">
-                                    <label htmlFor="description">Glance</label>
+                                    <label htmlFor="glance">Glance</label>
                                     <input
                                         type="text"
-                                        id="description"
-                                        name="description"
+                                        id="glance"
+                                        name="glance"
                                         onChange={handleChange}
                                         required
                                     />
@@ -75,6 +104,7 @@ const AddBlog = () => {
                                         required
                                     />
                                 </div>
+
                                 <div className="addPortInput">
                                     <label htmlFor="photos">Photos</label>
                                     <input
@@ -102,11 +132,21 @@ const AddBlog = () => {
                                         </optgroup>
                                     </select>
                                 </div>
+                                <div className="addPortInput">
+                                    <label htmlFor="author">Author</label>
+                                    <input
+                                        type="text"
+                                        id="author"
+                                        name="author"
+                                        onChange={handleChange}
+                                    />
+                                </div>
                                 <button onClick={handleSubmit} className="btnSubmit">
                                     Add Blog
                                 </button>
                             </form>
                         </div>
+                        {loading ? loadingPict : null}
                     </div>
                 </div>
             </div>
