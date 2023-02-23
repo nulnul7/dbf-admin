@@ -4,11 +4,14 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import AddPortfolio from "./components/portfolio/AddPortfolio";
-import UpdatePortfolio from "./components/portfolio/UpdatePortfolio";
-import DeletePortfolio from "./components/portfolio/DeletePortfolio";
+import AddPortfolio from "./components/portfolio_crud/AddPortfolio";
+import UpdatePortfolio from "./components/portfolio_crud/UpdatePortfolio";
+import DeletePortfolio from "./components/portfolio_crud/DeletePortfolio";
 import PortfoliosUI from "./pages/portfolios/PortfoliosUI";
-import AddBlog from "./components/blog/AddBlog";
+import BlogUI from "./pages/Blogs/BlogUI";
+import AddBlog from "./components/blog_crud/AddBlog";
+import DeleteBlog from "./components/blog_crud/DeleteBlog";
+import UpdateBlog from "./components/blog_crud/UpdateBlog";
 import ErrorPage from '../src/pages/Errorpage'
 
 
@@ -22,7 +25,10 @@ function App() {
         <Route path="/addPortfolio" element={<AddPortfolio />} />
         <Route path="/updatePortfolio" element={<UpdatePortfolio />} />
         <Route path="/deletePortfolio" element={<DeletePortfolio />} />
+        <Route path="/getBlog" element={<BlogUI />} />
         <Route path="/addBlog" element={<AddBlog />} />
+        <Route path="/updateBlog" element={<UpdateBlog />} />
+        <Route path="/deleteBlog" element={<DeleteBlog />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </div>

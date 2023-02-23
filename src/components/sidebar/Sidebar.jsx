@@ -30,7 +30,7 @@ const Sidebar = () => {
                     </ul>
                 </div>
                 <div className='navPortfolio'>
-                    <div className='sub'>Blog</div>
+                    <Link to="/getBlog"><div className='sub'>Blog</div></Link>
                     <ul>
                         <Link to='/AddBlog'><li className='navList'><NoteAddOutlinedIcon className='iconNav' /> Blog Add</li></Link>
                         <li className='navList'><UpdateOutlinedIcon className='iconNav' /> Blog Update</li>
