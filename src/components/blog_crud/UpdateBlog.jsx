@@ -10,7 +10,7 @@ const UpdateBlog = () => {
 
     const [updateBlog, setUpdateBlog] = useState({});
     const [blogPhotos, setBlogPhotos] = useState({});
-    const [idPort, setIdPort] = useState("");
+    const [idBlog, setIdBlog] = useState("");
     const [category, setCategory] = useState("");
     const location = useLocation();
     const navigate = useNavigate();
@@ -19,7 +19,20 @@ const UpdateBlog = () => {
     const { current } = id;
 
     useEffect(() => {
-        setIdPort(current);
+        setIdBlog(current);
+        try {
+            const getBlogData = async () => {
+                const blog = await axios.get(`http://localhost:5500/5R2I/blog/${current}`);
+                setUpdateBlog(blog.data);
+                setBlogPhotos(blog.data.photos)
+                console.log(blog.data, 'isi blog');
+            }
+            getBlogData()
+            console.log('isi photos', blogPhotos);
+        } catch (error) {
+            console.log(error);
+        }
+
         // eslint-disable-next-line
     }, [current]);
 
@@ -39,12 +52,11 @@ const UpdateBlog = () => {
             );
             console.log("isi dari updateForm", updatePhotos);
 
-            const { client, description, title } = updateBlog;
-            const updateData = { client, description, title, photos: category }
-            const updating = await axios.put(`http://localhost:5500/5R2I/portfolio/update/${idPort}`, updateData)
-            console.log('status', updating);
+            const { title, glance, content, author, category } = updateBlog;
+            const updateData = { title, glance, content, author, photos: updatePhotos, category }
 
-            navigate('/getPortfolio')
+            await axios.put(`http://localhost:5500/5R2I/blog/update/${idBlog}`, updateData)
+            navigate('/getBlog')
 
         } catch (error) {
             console.log(error);
@@ -55,6 +67,14 @@ const UpdateBlog = () => {
         e.preventDefault();
         setUpdateBlog((prev) => ({ ...prev, [e.target.id]: e.target.value }));
     };
+    const { title, glance, content, author } = updateBlog
+    // const getPhoto = (
+    //     updateBlog.photos.map(photo => {
+    //         return { photo }
+    //     })
+    // )
+
+
     return (
         <div className="container">
             <div className="wrapper">
@@ -68,7 +88,7 @@ const UpdateBlog = () => {
                                 <input
                                     type="text"
                                     id="idPortfolio"
-                                    value={idPort}
+                                    value={idBlog}
                                     name="idPortfolio"
                                     readOnly
                                 />
@@ -81,6 +101,7 @@ const UpdateBlog = () => {
                                     id="title"
                                     name="title"
                                     onChange={handleChange}
+                                    value={title}
                                     required
                                 />
                             </div>
@@ -90,6 +111,7 @@ const UpdateBlog = () => {
                                     type="text"
                                     id="glance"
                                     name="glance"
+                                    value={glance}
                                     onChange={handleChange}
                                     required
                                 />
@@ -101,6 +123,7 @@ const UpdateBlog = () => {
                                     cols="61"
                                     id="content"
                                     name="content"
+                                    value={content}
                                     onChange={handleChange}
                                     required
                                 />
@@ -140,6 +163,7 @@ const UpdateBlog = () => {
                                     id="author"
                                     name="author"
                                     onChange={handleChange}
+                                    value={author}
                                 />
                             </div>
                             <button onClick={handleSubmit} className="btnSubmit">
