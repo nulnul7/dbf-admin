@@ -55,7 +55,7 @@ const UpdateBlog = () => {
             const { title, glance, content, author, category } = updateBlog;
             const updateData = { title, glance, content, author, photos: updatePhotos, category }
 
-            await axios.put(`http://localhost:5500/5R2I/blog/update/${idBlog}`, updateData)
+            await axios.put(`http://localhost:5500/5R2I/blog/update/${current}`, updateData)
             navigate('/getBlog')
 
         } catch (error) {
@@ -101,7 +101,7 @@ const UpdateBlog = () => {
                                     id="title"
                                     name="title"
                                     onChange={handleChange}
-                                    value={title}
+                                    defaultValue={title}
                                     required
                                 />
                             </div>
@@ -111,7 +111,7 @@ const UpdateBlog = () => {
                                     type="text"
                                     id="glance"
                                     name="glance"
-                                    value={glance}
+                                    defaultValue={glance}
                                     onChange={handleChange}
                                     required
                                 />
@@ -163,7 +163,7 @@ const UpdateBlog = () => {
                                     id="author"
                                     name="author"
                                     onChange={handleChange}
-                                    value={author}
+                                    defaultValue={author}
                                 />
                             </div>
                             <button onClick={handleSubmit} className="btnSubmit">
