@@ -87,3 +87,32 @@
     margin-left: 150px;
     margin-top: 10px;
 }
+.loadingWrapper{
+    display: flex;
+    flex-direction: column;
+}
+.loader{
+    width: 710px;
+    height: 90%;
+    transform: translateX(-3%);
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    background-color: rgba(255, 255, 255, 0.95);
+}
+.pictLoader{
+    width: 14%;
+    position: absolute;
+    /* transform: translateX(-50%); */
+    z-index: 3;
+    top: 30%;
+    left: 55%;
+}
+.LoadingNumber{
+    font-size: 12px;
+    position: absolute;
+    z-index: 10;
+    left: 45%;
+    top: 50%;
+    text-align: center;
+}

@@ -33,7 +33,6 @@ const Login = () => {
             <div className="LogWrapper">
                 <h1 className="login">Login</h1>
                 <div className="LogForm">
-
                     <form className='loginForm'>
                         <input type='text' id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="username" required />
                         <input type='password' id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="password" required />

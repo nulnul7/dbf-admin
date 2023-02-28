@@ -12,7 +12,7 @@ const Home = () => {
 
   useEffect(() => {
     user === null && navigate('/langsung')
-  }, [user])
+  }, [])
 
   return (
 

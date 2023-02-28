@@ -12,6 +12,8 @@ const UpdateBlog = () => {
     const [blogPhotos, setBlogPhotos] = useState({});
     const [idBlog, setIdBlog] = useState("");
     const [category, setCategory] = useState("");
+    const [loading, setLoading] = useState(false)
+    const [indicatorNumber, setIndicatorNumber] = useState(10)
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -38,19 +40,33 @@ const UpdateBlog = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        //loading info
+        const options = {
+            onUploadProgress: (progressEvent) => {
+                const { loaded, total } = progressEvent;
+
+                let precentage = Math.floor((loaded * 100) / total);
+                console.log('options', precentage);
+                setIndicatorNumber(precentage)
+                precentage !== 100 ? setLoading(true) : setLoading(false)
+            },
+        };
+
         try {
             const updatePhotos = await Promise.all(
                 Object.values(blogPhotos).map(async (photo) => {
                     const updateForm = new FormData();
                     updateForm.append("file", photo);
                     updateForm.append("upload_preset", "blogImages");
-                    return await axios.post(
+                    const sendBlog = await axios.post(
                         "https://api.cloudinary.com/v1_1/mangga/image/upload",
-                        updateForm
+                        updateForm,
+                        options
                     );
+                    return sendBlog.data.url   // Blog URL from cloudinary
                 })
             );
-            console.log("isi dari updateForm", updatePhotos);
 
             const { title, glance, content, author, category } = updateBlog;
             const updateData = { title, glance, content, author, photos: updatePhotos, category }
@@ -81,6 +97,14 @@ const UpdateBlog = () => {
                 <Sidebar />
                 <div className="contentWrapper">
                     <div className="addPortHeader">Update Blog</div>
+                    {
+                        loading &&
+                        <div className="loadingWrapper">
+                            <div className="loader"></div>
+                            <img src={loadingPict} alt="loading pict" className="pictLoader" />
+                            <div className="LoadingNumber" style={{ width: `${indicatorNumber * 5}px`, backgroundColor: "greenyellow" }}>{indicatorNumber}</div>
+                        </div>
+                    }
                     <div className="addPort">
                         <form className="addPortForm">
                             <div className="addPortInput">
