@@ -10,7 +10,7 @@ const Login = () => {
     const [password, setPassword] = useState("")
     const navigate = useNavigate();
 
-    const { user, loading, error, dispatch } = useContext(AuthContext)
+    const { dispatch } = useContext(AuthContext)
 
     const handleSubmit = async (e) => {
         e.preventDefault();

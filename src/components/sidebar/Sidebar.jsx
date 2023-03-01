@@ -1,7 +1,7 @@
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+// import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
-import UpdateOutlinedIcon from '@mui/icons-material/UpdateOutlined';
+// import UpdateOutlinedIcon from '@mui/icons-material/UpdateOutlined';
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../AuthContext';
