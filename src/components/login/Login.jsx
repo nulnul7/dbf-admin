@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../AuthContext'
 import './login.css'
 
-const Login = () => {
 
-    const [name, setName] = useState("")
+const Login = () => {
+    const [username, setUserName] = useState("")
     const [password, setPassword] = useState("")
+    const [errorInfo, setErrorInfo] = useState('');
     const navigate = useNavigate();
 
     const { dispatch } = useContext(AuthContext)
@@ -16,15 +17,21 @@ const Login = () => {
         e.preventDefault();
         dispatch({ type: "LOGIN_START" })
         try {
-            const userLogin = { name, password }
+            const userLogin = { username, password }
             const login = await axios.post('http://localhost:5500/5R2I/auth/login', userLogin)
-            console.log('userlogin', login);
+            const getUser = JSON.parse(login.config.data);
+            // tidak bisa construck isi getUser karena bentrok dengan nama state, jadi diganti namaUser
+            const namaUser = getUser.username;
+            const aksesToken = login.data.aksesToken;
+            console.log('login: ', login, aksesToken);
+
             if (login.status === 200) {
-                dispatch({ type: "LOGIN_SUCCESS", payload: login.data.details });
-                navigate('/getPortfolio')
+                dispatch({ type: "LOGIN_SUCCESS", payload: { namauser: namaUser, aksesToken } });
+                navigate('/')
             }
         } catch (error) {
-            dispatch({ type: "LOGIN_FAILED", payload: error.response.data })
+            setErrorInfo(error.response.data.message);
+            dispatch({ type: "LOGIN_FAILED", error: error.response.data })
         }
     }
 
@@ -34,8 +41,10 @@ const Login = () => {
                 <h1 className="login">Login</h1>
                 <div className="LogForm">
                     <form className='loginForm'>
-                        <input type='text' id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="username" required />
+                        <input type='text' id="name" value={username} onChange={(e) => setUserName(e.target.value)} placeholder="username" required />
+                        <div className='errInfo'>{errorInfo !== 'wrong password cui!' && errorInfo}</div>
                         <input type='password' id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="password" required />
+                        <div className='errInfo'>{errorInfo === 'wrong password cui!' && errorInfo}</div>
                         <button className='submitBtn' onClick={handleSubmit}>Submit</button>
                     </form>
                 </div>

@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../sidebar/Sidebar";
 import "./portfolio.css";
-import Axios from "axios";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import loadingPict from "../../assets/LoadingBunny.gif";
+import jwt_decode from 'jwt-decode';
 
 const AddPortfolio = () => {
   const [photos, setPhotos] = useState("");
@@ -12,18 +13,66 @@ const AddPortfolio = () => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
 
+  // bagian validasi token
+  const [token, setToken] = useState('');
+  const [expired, setExpired] = useState('');
+
+  const getToken = async () => {
+    try {
+      const response = await axios.get('http://localhost:5500/5R2I/auth/token');
+      setToken(response.data.aksesToken);
+      const decoded = jwt_decode(response.data.aksesToken);
+      setExpired(decoded.exp);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getToken();
+  }, [])
+
+
   const handleChange = (e) => {
     setPortf((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
+  //alert untuk error dan navigasi ke login page
+  // function tokenError() {
+  //   alert('token sudah expired');
+
+  //   setTimeout(() => {
+  //     navigate('/langsung')
+  //   }, 3000)
+  // }
+
+  // axios iterceptor panggil refresh token
+  const axiosJWT = axios.create()
+
+  axiosJWT.interceptors.request.use(async (config) => {
+    const currentDate = new Date();
+    if (expired * 1000 < currentDate.getTime()) {
+      const response = await axios.get(`http://localhost:5500/5R2I/auth/token`);
+      config.headers.Authorization = `Bearer ${response.data.aksesToken}`
+      setToken(response.data.aksesToken);
+      const decoded = jwt_decode(response.data.aksesToken);
+      setExpired(decoded.exp);
+    }
+    return config;
+
+  }, (error) => {
+    return Promise.reject(error.response.status)
+  })
+
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     //loading info
     const options = {
       onUploadProgress: (progressEvent) => {
         const { loaded, total } = progressEvent;
-        
+
         let precentage = Math.floor((loaded * 100) / total);
         console.log('options', precentage);
         precentage !== 100 ? setLoading(true) : setLoading(false)
@@ -31,14 +80,18 @@ const AddPortfolio = () => {
     };
 
     try {
+      //bagian kirim foto-foto
       const list = await Promise.all(
         Object.values(photos).map(async (photo) => {
-          console.log("ini photo, photo");
           const datas = new FormData();
           datas.append("file", photo); // 'file' name is default
           datas.append("upload_preset", "portImages"); // 'upload_preset' name is default, 'portImages' nama folder di cloudinary
 
-          const upload = await Axios.post(
+          // const uploadOptions = {
+          //   use_filename: true // Menggunakan nama file asli
+          // };
+
+          const upload = await axiosJWT.post(
             "https://api.cloudinary.com/v1_1/mangga/image/upload",
             datas,
             options
@@ -56,14 +109,19 @@ const AddPortfolio = () => {
         photos: list,
         category,
       };
-      const statusUpdate = await Axios.post(
+      const statusUpdate = await axiosJWT.post(
         "http://localhost:5500/5R2I/portfolio/add",
-        portfolioData
+        portfolioData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
       );
       console.log("status", statusUpdate);
       navigate("/getPortfolio");
     } catch (error) {
-      console.log(error);
+      console.error('Error:', error);
+      return null;
     }
   };
 
@@ -126,9 +184,9 @@ const AddPortfolio = () => {
                     onChange={(e) => setCategory(e.target.value)}
                   >
                     <optgroup label="portfolio category">
-                      <option value="Graphic Design">Graphic Design</option>
-                      <option value="Web Design">Web Design</option>
-                      <option value="Photography">Photography</option>
+                      <option value="graphicDesign">Graphic Design</option>
+                      <option value="webDesign">Web Design</option>
+                      <option value="photography">Photography</option>
                     </optgroup>
                   </select>
                 </div>

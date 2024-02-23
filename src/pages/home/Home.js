@@ -1,18 +1,19 @@
+import { useContext, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '../../AuthContext'
 import Opening from '../../components/opening/Opening'
 import Sidebar from '../../components/sidebar/Sidebar'
 import './home.css'
-import { AuthContext } from '../../AuthContext'
-import { useContext, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 
 const Home = () => {
-  const { user } = useContext(AuthContext);
+  const { userData } = useContext(AuthContext);
   const navigate = useNavigate();
 
+
   useEffect(() => {
-    user === null && navigate('/langsung')
-  }, [])
+    userData == null && navigate('/langsung')
+  }, [userData, navigate])
 
   return (
 
