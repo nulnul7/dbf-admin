@@ -11,11 +11,13 @@ const BlogUI = () => {
 
     const [portfoliosData, setPortfoliosData] = useState([])
     const navigate = useNavigate();
+    const axiosInstance = axios.create({ baseURL: process.env.REACT_APP_API_URL, })
+
 
     useEffect(() => {
         try {
             const getPortfolios = async () => {
-                const tempPort = await axios.get("http://localhost:5500/5R2I/blog");
+                const tempPort = await axiosInstance.get("blog");
                 setPortfoliosData(tempPort.data);
             }
             getPortfolios();

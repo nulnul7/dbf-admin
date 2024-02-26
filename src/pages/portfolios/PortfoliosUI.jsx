@@ -15,11 +15,14 @@ const PortfoliosUI = () => {
   const { userData } = useContext(AuthContext)
   console.log('isi user : ', userData);
 
+  const axiosInstance = axios.create({ baseURL: process.env.REACT_APP_API_URL, })
+
+
   useEffect(() => {
     if (userData == null) { navigate('/langsung') }
     try {
       const getPortfolios = async () => {
-        const tempPort = await axios.get("http://localhost:5500/5R2I/portfolio");
+        const tempPort = await axiosInstance.get("portfolio");
         setPortfoliosData(tempPort.data);
       }
       getPortfolios();
